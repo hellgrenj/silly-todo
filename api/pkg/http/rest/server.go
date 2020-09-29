@@ -17,20 +17,14 @@ type Server struct {
 	todoService todo.Service
 }
 
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
-	enableCors(&w) // TODO write as a midleware instead?
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-	s.router.ServeHTTP(w, r)
-}
-
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS, PUT, PATCH")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Access-Control-Allow-Methods, Authorization, X-Requested-With")
+func middleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS, PUT, PATCH")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Access-Control-Allow-Methods, Authorization, X-Requested-With")
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (s *Server) decode(w http.ResponseWriter, r *http.Request, v validation.Ok) error {
@@ -49,7 +43,8 @@ func (s *Server) decode(w http.ResponseWriter, r *http.Request, v validation.Ok)
 // NewServer returns a new http server
 func NewServer(todoService todo.Service) *Server {
 	s := &Server{router: mux.NewRouter(), todoService: todoService}
-	s.routes()
+	s.router.Use(middleware)
+	s.registerRoutes()
 	fmt.Println("API running on port 8080")
 	return s
 }

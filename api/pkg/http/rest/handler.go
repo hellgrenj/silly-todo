@@ -17,6 +17,10 @@ type operationResult struct {
 	Result string `json:"result"`
 }
 
+func (s *Server) handleOptions(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
 func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You have reached %s!", r.URL.Path[1:])
 }
