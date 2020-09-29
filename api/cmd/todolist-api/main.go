@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/hellgrenj/silly-todo/pkg/todo"
@@ -27,5 +26,5 @@ func main() {
 	// then constructing rest server (passing in service dependency)
 	s := rest.NewServer(todo)
 	// then start rest service
-	log.Fatal(http.ListenAndServe(":8080", s))
+	log.Fatal(s.StartRestServer(":8080"))
 }

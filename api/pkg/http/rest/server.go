@@ -17,6 +17,11 @@ type Server struct {
 	todoService todo.Service
 }
 
+// StartRestServer start server at address addr.
+func (s *Server) StartRestServer(addr string) error {
+	return http.ListenAndServe(addr, s.router)
+}
+
 func middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
