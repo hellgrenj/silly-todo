@@ -12,3 +12,6 @@ A small (and silly) todo app built while evaluating a simple yet powerful web st
 
 
 This small app is made up of 3 services: a Postgres database, a http API (Go) and a frontend SPA (Svelte + Materialize). When started with docker-compose a migration container will run migrations and then exit. If you run these services outside of docker there is a migration (bash) script prepared in *./scripts*.
+
+## test
+in ./api run ```go test ./...```

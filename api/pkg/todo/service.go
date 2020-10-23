@@ -45,7 +45,7 @@ func (s *service) GetAllLists() ([]List, error) {
 	sortListOfListsByName(allLists)
 	fmt.Println("all todo lists")
 	for _, l := range allLists {
-		sortItemsInListByName(l)
+		sortItemsInListByName(&l)
 		fmt.Println(l)
 	}
 
@@ -53,7 +53,7 @@ func (s *service) GetAllLists() ([]List, error) {
 }
 func (s *service) GetListByID(id int) (List, error) {
 	l, err := s.r.GetListByID(id)
-	sortItemsInListByName(l)
+	sortItemsInListByName(&l)
 	return l, err
 }
 func (s *service) AddItem(item Item, listID int) (int, error) {
@@ -68,15 +68,13 @@ func (s *service) DeleteItemByID(id int) error {
 func (s *service) UpdateItemDone(id int, done bool) error {
 	return s.r.UpdateItemDone(id, done)
 }
-func sortItemsInListByName(l List) List {
+func sortItemsInListByName(l *List) {
 	sort.SliceStable(l.Items, func(i, j int) bool {
 		return l.Items[i].Name < l.Items[j].Name
 	})
-	return l
 }
-func sortListOfListsByName(lists []List) []List {
+func sortListOfListsByName(lists []List) {
 	sort.SliceStable(lists, func(i, j int) bool {
 		return lists[i].Name < lists[j].Name
 	})
-	return lists
 }
