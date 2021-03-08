@@ -1,6 +1,7 @@
 package rest
 
-func (s *Server) routes() {
+func (s *Server) registerRoutes() {
+	s.router.Methods("OPTIONS").HandlerFunc(s.handleOptions)
 	s.router.HandleFunc("/api/", s.handleAPI).Methods("GET")
 	s.router.HandleFunc("/todolist/", s.createTodoList).Methods("POST")
 	s.router.HandleFunc("/todolist/", s.getAllTodoLists).Methods("GET")
